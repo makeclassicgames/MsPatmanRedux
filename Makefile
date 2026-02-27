@@ -8,9 +8,9 @@ ${BUILD_DIR}/example.o: ${BUILD_DIR} example.s
 	ca65 -o ${BUILD_DIR}/example.o example.s
 ${BUILD_DIR}:
 	mkdir -p ${BUILD_DIR}
-run: example.nes
+run: ${BUILD_DIR}/example.nes
 	
-	wine $(MESEN_DIR)/Mesen.exe Z:\\home\\victor\\development\\makeclassicgames\\nes\\game1\\example.nes
+	wine $(MESEN_DIR)/Mesen.exe Z:\\home\\victor\\development\\makeclassicgames\\nes\\game1\\${BUILD_DIR}\\example.nes
 run_unix:
 	~/Descargas/Mesen_2.1.1_Linux_x64/Mesen example.nes
 clean:

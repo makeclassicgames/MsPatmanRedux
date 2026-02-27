@@ -40,4 +40,8 @@ TITLE = 2
 PLAYING = 3
 GAMEOVER = 4
 
+; physical constants
+GRAVITY = 1 ; gravity acceleration (pixels per frame^2)
+JUMP_VELOCITY = 5 ; initial jump velocity (pixels per frame)
+
 ; Level STATES

@@ -51,6 +51,8 @@ current_state:	.res 1 ; current state of the game (title, playing, gameover)
 scene_loaded:		.res 1 ; flag to indicate if the scene has been loaded (for animation purposes)
 frame_count:		.res 1 ; frame counter for animation timing
 curent_anim_frame:	.res 1 ; current animation frame for duck sprite
+is_jumping:		.res 1 ; flag to indicate if the duck is currently jumping
+jump_pressed:		.res 1 ; flag to indicate if the jump button is currently pressed
 ;*****************************************************************
 ; Sprite OAM Data area - copied to VRAM in NMI routine
 ;*****************************************************************
@@ -373,6 +375,30 @@ end_draw:
 	sta oam,x
 	rts
 .endproc 
+
+.proc jump_duck
+	lda jump_pressed
+	beq end_jump ; if jump button not pressed, do nothing
+	lda #0
+	sta jump_pressed ; reset jump button flag
+	lda is_jumping
+	cmp #0
+	beq start_jump
+	jmp end_jump
+start_jump:
+	lda duck_y
+	clc
+	sbc JUMP_VELOCITY
+	sta duck_y
+	lda #1
+	sta is_jumping
+end_jump:
+	lda duck_y
+	clc
+	adc GRAVITY
+	sta duck_y
+	rts
+.endproc
 
 .macro draw_background background_address
  ; draw background from array

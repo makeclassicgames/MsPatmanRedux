@@ -16,6 +16,10 @@
  .segment "CODE"
  .proc main
  	; main application - rendering is currently off
+	lda #0
+	sta is_jumping
+	lda #0
+	sta jump_pressed
 	lda #TITLE
 	sta current_state
 	lda #0
@@ -48,7 +52,7 @@ paletteloop:
  	lda nmi_ready
  	cmp #0
  	bne mainloop
-	
+	jsr jump_duck
  	; read the gamepad
  	jsr gamepad_poll
  	; now move the bat if left or right pressed
@@ -85,6 +89,12 @@ paletteloop:
 		lda #PLAYING
 		sta current_state
  NOT_GAMEPAD_START:
+	lda gamepad
+	and #PAD_A
+	beq NOT_GAMEPAD_A
+	    lda #1
+		sta jump_pressed
+ NOT_GAMEPAD_A:
  	; ensure our changes are rendered
  	lda #1
  	sta nmi_ready
