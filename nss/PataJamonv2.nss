@@ -60,7 +60,7 @@ VarPalBank_msprBuffer=0
 VarTileViewTagBuf=0
 VarBgPalCur=3
 VarPalActive=0
-VarTileActive=0
+VarTileActive=78
 VarBankActive=0
 VarPPUMask=0
 VarPPUMaskSet0=0
@@ -86,10 +86,10 @@ VarNameSelectionT=-1
 VarNameSelectionB=0
 VarNameCopyW=-1
 VarNameCopyH=-1
-VarCHRSelectionL=0
-VarCHRSelectionR=1
-VarCHRSelectionT=0
-VarCHRSelectionB=1
+VarCHRSelectionL=14
+VarCHRSelectionR=15
+VarCHRSelectionT=4
+VarCHRSelectionB=5
 VarCHRCopyW=1
 VarCHRCopyH=1
 VarCHRCopyRect=1
@@ -160,7 +160,7 @@ MetaspritePlayBackCursor=0
 
 FilterCHR=1
 FilterName=1
-FileNameCHR=Z:\home\victor\development\makeclassicgames\nes\game1\patav2.chr
+FileNameCHR=Z:\home\victor\development\makeclassicgames\nes\game1\chr\patafondos.chr
 FileNameName=
 FileNamePal=
 FileNameMetaSpriteBank=
@@ -176,19 +176,19 @@ RadioAutoexport_UseSubDir_NEXXT=0
 CheckAutoexport_MetatileAsBMP=0
 
 
-VarCHRSelected=0100[ff]
+VarCHRSelected=00[4e]0100[b1]
 
 
 Palette=0f19002c0f[d]1c21320f1122330f1223340f1324350f1324360f1526370f1627370f1928380f1829380f1b2a390f1b2b3c0f1c2c3b
 
 
-PalUndo=0f19002c0f0c21320f2426380f0b1a290f1c21320f1122330f1223340f1324350f1324360f1526370f1627370f1928380f1829380f1b2a390f1b2b3c0f1c2c3b
+PalUndo=0f19002c0f[d]1c21320f1122330f1223340f1324350f1324360f1526370f1627370f1928380f1829380f1b2a390f1b2b3c0f1c2c3b
 
 
 CHRMain=ff[18]00[10]ff[e]7f[2]ff[15]00[3]fdf8[3]f0[2]e0[2]ff[b]7f[3]3f[2]ff[e]f9f1ff[8]e0c0[2]80[3]00[2]ff[8]1f[2]0f[2]07[2]03[2]ff[d]fe[2]fcff[8]f1e1c1810100[3]ff[8]fe[2]f8[2]fc[2]feff[9]00[4]01[2]03[2]ff[9]7f[2]ff[d]f8f0e0c000[4]ff[d]7f[3]ff[f]feff[f]bfff[8]0080[2]00[5]ff[8]0300[7]ff[9]3f1f1e1c0c00[2]ff[a]3f01[4]00ff[c]c0[2]80[2]ff[8]80[4]00[4]ff[8]00[6]0103ff[8]7f3f[3]7fff[b]fe[2]fc[4]f8[2]ff[8]7f[2]3f[3]1f[3]ff[c]fe[4]ff[8]bf1f[4]0f[3]ff[8]07[4]0f[4]ff[8]fe[4]fc[4]ff[8]7f[2]3f[2]1f[4]ff[16]fec0f8[2]f0fe[3]ff[8]00[2]0f[3]7f[3]ff[8]00[2]ff[e]3f01fc[5]f8[3]ff[8]07[3]03[4]01ff[d]fdfc[2]ff[16]fee0ff[d]e000[2]ff[c]00[8]ff[8]00[8]f0ff[7]0f00[8]80f0feff[5]7f0f010f1f[4]3f[3]ff[b]df[2]8f[3]ff[8]f8[4]f0[4]ff[8]0f[3]07[3]03[2]ff[10]1f0100[6]ff[2]dfff[7]3f0300[4]f8f0f8ff[3]feff[5]7f0f010001[2]001f[4]dfff[7]3ffcf8[5]f0[2]ff[8]7f[4]3f[3]1fff[17]fcff[b]fef8e08000ff[9]f8c000[5]e0fcff[6]1f0300[8]80f0feff[5]7f0f0100[8]e0f8ff[6]1f07003f7f[4]fe[2]ff[9]8707[2]03[4]83ff[8]e0[3]fe[4]ff[8]fc0301[2]3d3f[2]ff[5]fef8c000[2]ff[2]bfff[5]fef0c000[5]ff[8]0700[7]f0fc[2]ff[7]1f00[5]1f[2]ff[2]fbff[7]0700[3]ff[c]f800[3]ff[3]dfff[6]fce000[4]ff[8]f08000[6]fffbff[6]3f0700[6]cf8fff[8]0f00[5]ff[a]c000[5]ff[8]e000[b37]ff[8]00[10]ff[18]00[c0]020003216170f0ff0001[4]2060fff8fcf4f8e0f870f878f46cfefffc00c0020003216170f0ff0001[4]2060fff8fcf4f8e0f870f878f46cfefffc00c000[c0]7f3f[2]1f0700[3]7733381e0700[3]fcfe[2]fcf800[3]fcfe[2]1cf8c0[2]e07f3f[2]1f0700[3]7733381e07030607fcfe[2]fcf800[3]fcfe[2]1cf8c0603800[2dc0]
 
 
-CHRUndo=00[10]ff[10]fdf8[3]f0[2]e0[2]ff[b]7f[3]3f[2]ff[e]f9f1ff[8]e0c0[2]80[3]00[2]ff[8]1f[2]0f[2]07[2]03[2]ff[d]fe[2]fcff[8]f1e1c1810100[3]ff[8]fe[2]f8[2]fc[2]feff[9]00[8]ff[8]00[4]01[2]03[2]ff[9]7f[2]ff[d]f8f0e0c000[4]ff[d]7f[3]ff[f]feff[e]7f[2]ff[f]bfff[8]0080[2]00[5]ff[8]0300[7]ff[9]3f1f1e1c0c00[2]ff[a]3f01[4]00ff[c]c0[2]80[2]ff[8]80[4]00[4]ff[8]00[6]0103ff[8]7f3f[3]7fff[b]fe[2]fc[4]f8[2]ff[8]7f[2]3f[3]1f[3]ff[c]fe[4]ff[8]bf1f[4]0f[3]ff[8]07[4]0f[4]ff[8]fe[4]fc[4]ff[8]7f[2]3f[2]1f[4]ff[16]fec0f8[2]f0fe[3]ff[8]00[2]0f[3]7f[3]ff[8]00[2]ff[e]3f01fc[5]f8[3]ff[8]07[3]03[4]01ff[d]fdfc[2]ff[16]fee0ff[d]e000[2]ff[c]00[8]ff[8]00[8]f0ff[7]0f00[8]80f0feff[5]7f0f010f1f[4]3f[3]ff[b]df[2]8f[3]ff[8]f8[4]f0[4]ff[8]0f[3]07[3]03[2]ff[10]00[8]ff[8]1f0100[6]ff[2]dfff[7]3f0300[4]f8f0f8ff[3]feff[5]7f0f010001[2]001f[4]dfff[7]3ffcf8[5]f0[2]ff[8]7f[4]3f[3]1fff[17]fcff[b]fef8e08000ff[9]f8c000[5]e0fcff[6]1f0300[8]80f0feff[5]7f0f0100[8]e0f8ff[6]1f07003f7f[4]fe[2]ff[9]8707[2]03[4]83ff[8]e0[3]fe[4]ff[8]fc0301[2]3d3f[2]ff[5]fef8c000[2]ff[2]bfff[5]fef0c000[5]ff[8]0700[7]f0fc[2]ff[7]1f00[5]1f[2]ff[2]fbff[7]0700[3]ff[d]00[3]ff[c]f800[3]ff[3]dfff[6]fce000[4]ff[8]f08000[6]fffbff[6]3f0700[6]cf8fff[8]0f00[5]ff[a]c000[5]ff[8]e000[b27]ff[8]00[10]ff[18]00[c0]020003216170f0ff0001[4]2060fff8fcf4f8e0f870f878f46cfefffc00c0020003216170f0ff0001[4]2060fff8fcf4f8e0f870f878f46cfefffc00c000[c0]7f3f[2]1f0700[3]7733381e0700[3]fcfe[2]fcf800[3]fcfe[2]1cf8c0[2]e07f3f[2]1f0700[3]7733381e07030607fcfe[2]fcf800[3]fcfe[2]1cf8c0603800[2dc0]
+CHRUndo=ff[18]00[10]ff[e]7f[2]ff[15]00[3]fdf8[3]f0[2]e0[2]ff[b]7f[3]3f[2]ff[e]f9f1ff[8]e0c0[2]80[3]00[2]ff[8]1f[2]0f[2]07[2]03[2]ff[d]fe[2]fcff[8]f1e1c1810100[3]ff[8]fe[2]f8[2]fc[2]feff[9]00[4]01[2]03[2]ff[9]7f[2]ff[d]f8f0e0c000[4]ff[d]7f[3]ff[f]feff[f]bfff[8]0080[2]00[5]ff[8]0300[7]ff[9]3f1f1e1c0c00[2]ff[a]3f01[4]00ff[c]c0[2]80[2]ff[8]80[4]00[4]ff[8]00[6]0103ff[8]7f3f[3]7fff[b]fe[2]fc[4]f8[2]ff[8]7f[2]3f[3]1f[3]ff[c]fe[4]ff[8]bf1f[4]0f[3]ff[8]07[4]0f[4]ff[8]fe[4]fc[4]ff[8]7f[2]3f[2]1f[4]ff[16]fec0f8[2]f0fe[3]ff[8]00[2]0f[3]7f[3]ff[8]00[2]ff[e]3f01fc[5]f8[3]ff[8]07[3]03[4]01ff[d]fdfc[2]ff[16]fee0ff[d]e000[2]ff[c]00[8]ff[8]00[8]f0ff[7]0f00[8]80f0feff[5]7f0f010f1f[4]3f[3]ff[b]df[2]8f[3]ff[8]f8[4]f0[4]ff[8]0f[3]07[3]03[2]ff[10]1f0100[6]ff[2]dfff[7]3f0300[4]f8f0f8ff[3]feff[5]7f0f010001[2]001f[4]dfff[7]3ffcf8[5]f0[2]ff[8]7f[4]3f[3]1fff[17]fcff[b]fef8e08000ff[9]f8c000[5]e0fcff[6]1f0300[8]80f0feff[5]7f0f0100[8]e0f8ff[6]1f07003f7f[4]fe[2]ff[9]8707[2]03[4]83ff[8]e0[3]fe[4]ff[8]fc0301[2]3d3f[2]ff[5]fef8c000[2]ff[2]bfff[5]fef0c000[5]ff[8]0700[7]f0fc[2]ff[7]1f00[5]1f[2]ff[2]fbff[7]0700[3]ff[c]f800[3]ff[3]dfff[6]fce000[4]ff[8]f08000[6]fffbff[6]3f0700[6]cf8fff[8]0f00[5]ff[a]c000[5]ff[8]e000[b37]ff[8]00[10]ff[18]00[c0]020003216170f0ff0001[4]2060fff8fcf4f8e0f870f878f46cfefffc00c0020003216170f0ff0001[4]2060fff8fcf4f8e0f870f878f46cfefffc00c000[c0]7f3f[2]1f0700[3]7733381e0700[3]fcfe[2]fcf800[3]fcfe[2]1cf8c0[2]e07f3f[2]1f0700[3]7733381e07030607fcfe[2]fcf800[3]fcfe[2]1cf8c0603800[2dc0]
 
 
 CHRCopy=00[10]ff[8]00[10]ff[18]020003216170f0ff0001[4]2060fff8fcf4f8e0f870f878f46cfefffc00c0020003216170f0ff0001[4]2060fff8fcf4f8e0f870f878f46cfefffc00c07f3f[2]1f0700[3]7733381e0700[3]fcfe[2]fcf800[3]fcfe[2]1cf8c0[2]e07f3f[2]1f0700[3]7733381e07030607fcfe[2]fcf800[3]fcfe[2]1cf8c0603800[3f40]
@@ -200,7 +200,7 @@ NameTable=00[194]050600[4]0700[19]080900[3]0a0b00[18]0c020d0e00[2]0f021000[5]110
 NameCopy=00[380]
 
 
-NameUndo=00[380]
+NameUndo=00[194]050600[4]0700[19]080900[3]0a0b00[18]0c020d0e00[2]0f021000[5]110300[4]1200[c]131415161718191a00[2]0300[2]1b1c00[3]1d1e00[c]02[6]1f00[2]2021002223242500[2]26272800[8]292a2b2c2d2e02[3]2f300031320001[4]33343536373800[4]393a3b01[6]3c3d3e3f400041424301[7]44454604[2]47484901[b]4a4b4c4d01[102]
 
 
 AttrTable=00[38]

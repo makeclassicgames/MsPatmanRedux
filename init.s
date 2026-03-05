@@ -388,14 +388,20 @@ end_draw:
 start_jump:
 	lda duck_y
 	clc
-	sbc JUMP_VELOCITY
+	sbc #JUMP_VELOCITY
 	sta duck_y
 	lda #1
 	sta is_jumping
 end_jump:
 	lda duck_y
+	cmp #GROUND_Y
+	bne fall_jump
+	lda #0
+	sta is_jumping
+	rts
+fall_jump:	lda duck_y
 	clc
-	adc GRAVITY
+	adc #GRAVITY
 	sta duck_y
 	rts
 .endproc
