@@ -53,6 +53,9 @@ frame_count:		.res 1 ; frame counter for animation timing
 curent_anim_frame:	.res 1 ; current animation frame for duck sprite
 is_jumping:		.res 1 ; flag to indicate if the duck is currently jumping
 jump_pressed:		.res 1 ; flag to indicate if the jump button is currently pressed
+a_was_down:		.res 1 ; latch to detect a new A press (edge trigger)
+obstacle_x:		.res 1 ; x position of obstacle
+obstacle_dx:		.res 1 ; x velocity of obstacle
 ;*****************************************************************
 ; Sprite OAM Data area - copied to VRAM in NMI routine
 ;*****************************************************************
@@ -225,7 +228,7 @@ ppu_update_end:
 .proc draw_animation_duck
 	inc frame_count
 	lda frame_count
-	cmp #5 ; change animation frame every 10 frames
+	cmp #10 ; change animation frame every 10 frames
 	bne end_anim
 	lda #0
 	sta frame_count
@@ -243,6 +246,69 @@ ppu_update_end:
 draw_anim_2:
 	jsr draw_duck_anim_2
 end_draw:
+	rts
+.endproc
+
+.proc draw_obstacle
+	lda #GROUND_Y
+	ldx #16
+	sta oam,x
+	inx
+	lda #$02
+	sta oam,x
+	inx
+	lda #%00000001 ; Sprite Attributes
+	sta oam,x
+	inx
+	lda obstacle_x
+	sta oam,x
+.endproc
+
+; update Physics for duck sprite - apply velocity to position
+.proc update_physics
+	lda duck_y
+	clc
+	adc d_y
+	sta duck_y
+
+	; clamp to ground and clear jump state when landing
+	lda duck_y
+	cmp #GROUND_Y
+	bcc apply_gravity
+	lda #GROUND_Y
+	sta duck_y
+	lda #0
+	sta d_y
+	sta is_jumping
+	jmp update_obstacle
+
+apply_gravity:
+	; apply gravity in-air and clamp to max fall speed
+	lda d_y
+	bmi gravity_step
+	cmp #MAX_FALL_SPEED
+	bcs update_obstacle
+gravity_step:
+	clc
+	adc #GRAVITY
+	bmi store_dy
+	cmp #MAX_FALL_SPEED
+	bcc store_dy
+	lda #MAX_FALL_SPEED
+store_dy:
+	sta d_y
+
+update_obstacle:
+	lda obstacle_x
+	cmp obstacle_dx
+	bcc reset_obstacle
+	sec
+	sbc obstacle_dx
+	sta obstacle_x
+	rts
+reset_obstacle:
+	lda #255
+	sta obstacle_x 
 	rts
 .endproc
 
@@ -378,31 +444,19 @@ end_draw:
 
 .proc jump_duck
 	lda jump_pressed
-	beq end_jump ; if jump button not pressed, do nothing
-	lda #0
-	sta jump_pressed ; reset jump button flag
+	cmp #0
+	beq end_jump
 	lda is_jumping
 	cmp #0
-	beq start_jump
-	jmp end_jump
-start_jump:
-	lda duck_y
-	clc
-	sbc #JUMP_VELOCITY
-	sta duck_y
+	bne end_jump
 	lda #1
 	sta is_jumping
-end_jump:
-	lda duck_y
-	cmp #GROUND_Y
-	bne fall_jump
+	; signed upward impulse (negative velocity)
+	lda #($100 - JUMP_VELOCITY)
+	sta d_y
 	lda #0
-	sta is_jumping
-	rts
-fall_jump:	lda duck_y
-	clc
-	adc #GRAVITY
-	sta duck_y
+	sta jump_pressed
+end_jump:
 	rts
 .endproc
 

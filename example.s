@@ -15,22 +15,31 @@
 ;*****************************************************************
  .segment "CODE"
  .proc main
- 	; main application - rendering is currently off
+	lda #0
+	sta frame_count
+	; main application - rendering is currently off
 	lda #0
 	sta is_jumping
 	lda #0
 	sta jump_pressed
+	lda #0
+	sta a_was_down
 	lda #TITLE
 	sta current_state
 	lda #0
 	sta scene_loaded
-
+	lda #0
+	sta d_y
 	lda #GROUND_Y
 	sta duck_y ; set duck Y position
 	lda #8
 	sta duck_x ; set duck X position
- 	; initialize palette table
- 	ldx #0
+	lda #1
+	sta obstacle_dx
+	lda #240
+	sta obstacle_x ; set obstacle X position
+	; initialize palette table
+	ldx #0
 paletteloop:
 	lda default_palette, x
 	sta palette, x
@@ -38,67 +47,78 @@ paletteloop:
 	cpx #32
 	bcc paletteloop
 
- 	; clear 1st name table
- 	jsr clear_nametable
+	; clear 1st name table
+	jsr clear_nametable
 	jsr load_scene
 
- 	; get the screen to render
- 	jsr ppu_update
+	; get the screen to render
+	jsr ppu_update
 
- mainloop:
-	jsr load_scene
-	jsr draw_animation_duck
- 	; skip reading controls if and change has not been drawn
- 	lda nmi_ready
- 	cmp #0
- 	bne mainloop
-	jsr jump_duck
- 	; read the gamepad
- 	jsr gamepad_poll
- 	; now move the bat if left or right pressed
- 	lda gamepad
- 	and #PAD_L
- 	beq NOT_GAMEPAD_LEFT
- 		; gamepad has been pressed left
- 		lda duck_x ; get current X
- 		cmp #0
- 		beq NOT_GAMEPAD_LEFT
- 		sec
- 		sbc #1
- 		sta duck_x ; change X to the left
- NOT_GAMEPAD_LEFT:
- 	lda gamepad
- 	and #PAD_R
- 	beq NOT_GAMEPAD_RIGHT
- 		; gamepad has been pressed right
- 		lda duck_x ; get current X
- 		cmp #240
- 		beq NOT_GAMEPAD_RIGHT
- 		clc
- 		adc #1
- 		sta duck_x ; change X to the left
- NOT_GAMEPAD_RIGHT:
+mainloop:
+	; wait until the previous frame upload finishes
+	lda nmi_ready
+	bne mainloop
+
+	; read controls once per rendered frame
+	jsr gamepad_poll
+
+	; now move the duck if left or right pressed
+	lda gamepad
+	and #PAD_L
+	beq not_gamepad_left
+		lda duck_x ; get current X
+		cmp #0
+		beq not_gamepad_left
+		sec
+		sbc #1
+		sta duck_x
+not_gamepad_left:
+	lda gamepad
+	and #PAD_R
+	beq not_gamepad_right
+		lda duck_x ; get current X
+		cmp #240
+		beq not_gamepad_right
+		clc
+		adc #1
+		sta duck_x
+not_gamepad_right:
 	lda gamepad
 	and #PAD_START
-	beq NOT_GAMEPAD_START
-	    ldx current_state
+	beq not_gamepad_start
+		ldx current_state
 		cpx #TITLE
-		BNE NOT_GAMEPAD_START
+		bne not_gamepad_start
 		lda #0
 		sta scene_loaded
 		lda #PLAYING
 		sta current_state
- NOT_GAMEPAD_START:
+not_gamepad_start:
 	lda gamepad
 	and #PAD_A
-	beq NOT_GAMEPAD_A
+	beq a_released
+		lda a_was_down
+		bne a_done
+		lda #1
+		sta jump_pressed
+		lda #1
+		sta a_was_down
+		jmp a_done
+a_released:
+	lda #0
+	sta a_was_down
+a_done:
+
+	jsr load_scene
+	jsr jump_duck
+	jsr update_physics
+	jsr draw_obstacle
+	jsr draw_animation_duck
+
+	; request NMI upload for this frame
 	lda #1
-	sta jump_pressed
- NOT_GAMEPAD_A:
- 	; ensure our changes are rendered
- 	lda #1
- 	sta nmi_ready
- 	jmp mainloop
+	sta nmi_ready
+	jmp mainloop
 .endproc
 
 .segment "CODE"
