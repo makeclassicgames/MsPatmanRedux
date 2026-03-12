@@ -31,6 +31,35 @@
 	rts
 .endproc
 
+.segment "CODE"
+.proc clear_nametable
+ 	lda PPU_STATUS ; reset address latch
+ 	lda #$20 ; set PPU address to $2000
+ 	sta PPU_VRAM_ADDRESS2
+ 	lda #$00
+ 	sta PPU_VRAM_ADDRESS2
+
+ 	; empty nametable
+ 	lda #0
+ 	ldy #30 ; clear 30 rows
+ 	rowloop:
+ 		ldx #32 ; 32 columns
+ 		columnloop:
+ 			sta PPU_VRAM_IO
+ 			dex
+ 			bne columnloop
+ 		dey
+ 		bne rowloop
+
+ 	; empty attribute table
+ 	ldx #64 ; attribute table is 64 bytes
+ 	loop:
+ 		sta PPU_VRAM_IO
+ 		dex
+ 		bne loop
+ 	rts
+ .endproc
+
 ;********************************************************************************************************
 ;draw_animation_duck: draws duck animation
 ;********************************************************************************************************
