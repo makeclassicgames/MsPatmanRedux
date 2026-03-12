@@ -1,4 +1,7 @@
 
+.ifndef CONSTANTS_S
+
+CONSTANTS_S = 1
 ;*****************************************************************
 ; Define NES control register values
 ;*****************************************************************
@@ -46,3 +49,5 @@ JUMP_VELOCITY = 8 ; initial jump velocity (pixels per frame)
 GROUND_Y = 176
 MAX_FALL_SPEED = 2
 ; Level STATES
+
+.endif

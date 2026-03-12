@@ -1,212 +1,264 @@
-; CH05 - Programming Games for NES
-; Base NES game shell demo
-
 ;*****************************************************************
-; Define NES control register values
+; Import both the background and sprite character sets
 ;*****************************************************************
 
-.include "init.s"
-
-
+.segment "TILES"
+.incbin "chr/patafondos.chr"
 
 
 ;*****************************************************************
-; Main application logic section includes the game loop
+; Some useful functions
 ;*****************************************************************
- .segment "CODE"
- .proc main
-	lda #0
-	sta frame_count
-	; main application - rendering is currently off
-	lda #0
-	sta is_jumping
-	lda #0
-	sta jump_pressed
-	lda #0
-	sta a_was_down
-	lda #TITLE
-	sta current_state
-	lda #0
-	sta scene_loaded
-	lda #0
-	sta d_y
-	lda #GROUND_Y
-	sta duck_y ; set duck Y position
-	lda #8
-	sta duck_x ; set duck X position
-	lda #1
-	sta obstacle_dx
-	lda #240
-	sta obstacle_x ; set obstacle X position
-	; initialize palette table
-	ldx #0
-paletteloop:
-	lda default_palette, x
-	sta palette, x
-	inx
-	cpx #32
-	bcc paletteloop
-
-	; clear 1st name table
-	jsr clear_nametable
-	jsr load_scene
-
-	; get the screen to render
-	jsr ppu_update
-
-mainloop:
-	; wait until the previous frame upload finishes
-	lda nmi_ready
-	bne mainloop
-
-	; read controls once per rendered frame
-	jsr gamepad_poll
-
-	; now move the duck if left or right pressed
-	lda gamepad
-	and #PAD_L
-	beq not_gamepad_left
-		lda duck_x ; get current X
-		cmp #0
-		beq not_gamepad_left
-		sec
-		sbc #1
-		sta duck_x
-not_gamepad_left:
-	lda gamepad
-	and #PAD_R
-	beq not_gamepad_right
-		lda duck_x ; get current X
-		cmp #240
-		beq not_gamepad_right
-		clc
-		adc #1
-		sta duck_x
-not_gamepad_right:
-	lda gamepad
-	and #PAD_START
-	beq not_gamepad_start
-		ldx current_state
-		cpx #TITLE
-		bne not_gamepad_start
-		lda #0
-		sta scene_loaded
-		lda #PLAYING
-		sta current_state
-not_gamepad_start:
-	lda gamepad
-	and #PAD_A
-	beq a_released
-		lda a_was_down
-		bne a_done
-		lda #1
-		sta jump_pressed
-		lda #1
-		sta a_was_down
-		jmp a_done
-a_released:
-	lda #0
-	sta a_was_down
-a_done:
-
-	jsr load_scene
-	jsr jump_duck
-	jsr update_physics
-	jsr draw_obstacle
-	jsr draw_animation_duck
-
-	; request NMI upload for this frame
-	lda #1
-	sta nmi_ready
-	jmp mainloop
-.endproc
 
 .segment "CODE"
-.proc clear_nametable
+; ppu_update: waits until next NMI, turns rendering on (if not already), uploads OAM, palette, and nametable update to PPU
+.proc ppu_update
+	lda #1
+	sta nmi_ready
+	loop:
+		lda nmi_ready
+		bne loop
+	rts
+.endproc
+
+; ppu_off: waits until next NMI, turns rendering off (now safe to write PPU directly via PPU_VRAM_IO)
+.proc ppu_off
+	lda #2
+	sta nmi_ready
+	loop:
+		lda nmi_ready
+		bne loop
+	rts
+.endproc
+
+;********************************************************************************************************
+;draw_animation_duck: draws duck animation
+;********************************************************************************************************
+
+.segment "CODE"
+.proc draw_animation_duck
+	inc frame_count
+	lda frame_count
+	cmp #10 ; change animation frame every 10 frames
+	bne end_anim
+	lda #0
+	sta frame_count
+	inc curent_anim_frame
+	lda curent_anim_frame
+	cmp #2
+	bne end_anim
+	lda #0
+	sta curent_anim_frame
+	end_anim:
+	lda curent_anim_frame
+	bne draw_anim_2
+	jsr draw_duck_anim_1
+	jmp end_draw
+draw_anim_2:
+	jsr draw_duck_anim_2
+end_draw:
+	rts
+.endproc
+
+.proc draw_duck_anim_1
+	ldx #0
+	ldy #0
+	lda duck_y ; load Y Coordinate
+	sta oam,x 
+	inx
+	lda duck_tiles,y ; load Tile Index
+	sta oam,x
+	inx
+	lda #%00000001 ; Sprite Attributes
+	sta oam,x
+	inx
+	lda duck_x ; load X Coordinate
+	sta oam,x
+	inx
+	; second Sprite
+	iny
+	lda duck_y ; load Y Coordinate
+	sta oam,x
+	inx
+	lda duck_tiles,y ; load Tile Index
+	sta oam,x
+	inx	
+	lda #%00000001 ; Sprite Attributes
+	sta oam,x
+	inx
+	lda duck_x
+	clc
+	adc #8 ; load X Coordinate
+	sta oam,x
+	inx
+	iny
+	lda duck_y ; load Y Coordinate
+	clc
+	adc #8
+	sta oam,x
+	inx
+	lda duck_tiles,y ; load Tile Index
+	sta oam,x
+	inx
+	lda #%00000001 ; Sprite Attributes
+	sta oam,x
+	inx
+	lda duck_x ; load X Coordinate
+	sta oam,x
+	inx
+	iny
+	lda duck_y ; load Y Coordinate
+	clc
+	adc #8
+	sta oam,x
+	inx
+	lda duck_tiles,y
+	sta oam,x
+	inx
+	lda #%00000001 ; Sprite Attributes
+	sta oam,x
+	inx
+	lda duck_x
+	clc
+	adc #8 ; load X Coordinate
+	sta oam,x
+	rts
+.endproc 
+
+.proc draw_duck_anim_2
+	ldx #0
+	ldy #0
+	lda duck_y ; load Y Coordinate
+	sta oam,x 
+	inx
+	lda duck_tiles_2,y ; load Tile Index
+	sta oam,x
+	inx
+	lda #%00000001 ; Sprite Attributes
+	sta oam,x
+	inx
+	lda duck_x ; load X Coordinate
+	sta oam,x
+	inx
+	; second Sprite
+	iny
+	lda duck_y ; load Y Coordinate
+	sta oam,x
+	inx
+	lda duck_tiles_2,y ; load Tile Index
+	sta oam,x
+	inx	
+	lda #%00000001 ; Sprite Attributes
+	sta oam,x
+	inx
+	lda duck_x
+	clc
+	adc #8 ; load X Coordinate
+	sta oam,x
+	inx
+	iny
+	lda duck_y ; load Y Coordinate
+	clc
+	adc #8
+	sta oam,x
+	inx
+	lda duck_tiles_2,y ; load Tile Index
+	sta oam,x
+	inx
+	lda #%00000001 ; Sprite Attributes
+	sta oam,x
+	inx
+	lda duck_x ; load X Coordinate
+	sta oam,x
+	inx
+	iny
+	lda duck_y ; load Y Coordinate
+	clc
+	adc #8
+	sta oam,x
+	inx
+	lda duck_tiles_2,y
+	sta oam,x
+	inx
+	lda #%00000001 ; Sprite Attributes
+	sta oam,x
+	inx
+	lda duck_x
+	clc
+	adc #8 ; load X Coordinate
+	sta oam,x
+	rts
+.endproc 
+
+.segment "CODE"
+.proc draw_obstacle
+	lda #GROUND_Y
+	ldx #16
+	sta oam,x
+	inx
+	lda #$02
+	sta oam,x
+	inx
+	lda #%00000001 ; Sprite Attributes
+	sta oam,x
+	inx
+	lda obstacle_x
+	sta oam,x
+.endproc
+
+.macro draw_background background_address
+ ; draw background from array
  	lda PPU_STATUS ; reset address latch
  	lda #$20 ; set PPU address to $2000
  	sta PPU_VRAM_ADDRESS2
  	lda #$00
  	sta PPU_VRAM_ADDRESS2
+ 	
+ 	; write first 256 bytes
+ 	ldx #0
+:	lda background_address, x
+ 	sta PPU_VRAM_IO
+ 	inx
+ 	bne :-
+ 	; write second 256 bytes
+ 	ldx #0
+:	lda background_address +256, x
+ 	sta PPU_VRAM_IO
+ 	inx
+ 	bne :-
+ 	; write third 256 bytes
+ 	ldx #0
+:	lda background_address +512, x
+ 	sta PPU_VRAM_IO
+ 	inx
+ 	bne :-
+ 	; write remaining 192 bytes (768-959)
+ 	ldx #0
+:	lda background_address +768, x
+ 	sta PPU_VRAM_IO
+ 	inx
+ 	cpx #192
+ 	bne :-
 
- 	; empty nametable
- 	lda #0
- 	ldy #30 ; clear 30 rows
- 	rowloop:
- 		ldx #32 ; 32 columns
- 		columnloop:
- 			sta PPU_VRAM_IO
- 			dex
- 			bne columnloop
- 		dey
- 		bne rowloop
-
- 	; empty attribute table
- 	ldx #64 ; attribute table is 64 bytes
- 	loop:
- 		sta PPU_VRAM_IO
- 		dex
- 		bne loop
- 	rts
- .endproc
-
-.segment "CODE"
-.proc load_scene
-	lda scene_loaded
-	cmp #1
-	bne not_loaded
-	rts
-not_loaded:
-	jsr ppu_off
-	ldx current_state
-	CPX #TITLE
-	BNE NOT_TITLE
-	; load title screen
-	draw_background background_tiles_B
-	JMP end_load_scene
-NOT_TITLE:
-	; load game screen
-	draw_background background_tiles_A
-end_load_scene:	
-	lda #1
-	sta scene_loaded
-	rts
-.endproc
- 
-
-;*****************************************************************
-; gamepad_poll: this reads the gamepad state into the variable labelled "gamepad"
-; This only reads the first gamepad, and also if DPCM samples are played they can
-; conflict with gamepad reading, which may give incorrect results.
-;*****************************************************************
-
-.segment "CODE"
-.proc gamepad_poll
-	; strobe the gamepad to latch current button state
-	lda #1
-	sta JOYPAD1
+	; reset scroll position
+	lda PPU_STATUS
 	lda #0
-	sta JOYPAD1
-	; read 8 bytes from the interface at $4016
-	ldx #8
-loop:
-	pha
-	lda JOYPAD1
-	; combine low two bits and store in carry bit
-	and #%00000011
-	cmp #%00000001
-	pla
-	; rotate carry into gamepad variable
-	ror
-	dex
-	bne loop
-	sta gamepad
-	rts
-.endproc
+	sta PPU_VRAM_ADDRESS1
+	sta PPU_VRAM_ADDRESS1
+.endmacro
 
-;*****************************************************************
-; Our default palette table 16 entries for tiles and 16 entries for sprites
-;*****************************************************************
+;******************************************************************
+; Graphics DATA (ROM)
+;******************************************************************
+
+.segment "RODATA"
+duck_tiles:
+.byte $10,$11,$20,$21
+
+duck_tiles_2:
+.byte $12,$13,$22,$23
+
+; Palette Data
 
 .segment "RODATA"
 default_palette:
@@ -219,16 +271,11 @@ default_palette:
 .byte $0f,$1b,$2b,$3b ; sp2 teal
 .byte $0f,$12,$22,$32 ; sp3 marine
 
-welcome_txt:
-.byte 'W','E','L','C', 'O', 'M', 'E', 0
 
-duck_tiles:
-.byte $10,$11,$20,$21
-
-duck_tiles_2:
-.byte $12,$13,$22,$23
+;; Background Tiles for Drawing
 
 ; Full screen background (960 bytes = 30 rows * 32 columns)
+.segment "RODATA"
 background_tiles_A:
 	.byte $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01
 	.byte $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01
