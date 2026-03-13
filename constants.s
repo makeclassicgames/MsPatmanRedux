@@ -46,7 +46,7 @@ GAMEOVER = 4
 ; physical constants
 GRAVITY = 1 ; gravity acceleration (pixels per frame^2)
 JUMP_VELOCITY = 8 ; initial jump velocity (pixels per frame)
-GROUND_Y = 176
+GROUND_Y = 192
 MAX_FALL_SPEED = 2
 ; Level STATES
 

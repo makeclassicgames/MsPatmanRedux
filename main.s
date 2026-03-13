@@ -97,11 +97,15 @@ a_released:
 a_done:
 
 	jsr load_scene
+	lda current_state
+	cmp #PLAYING
+	bne @not_play
 	jsr jump_duck
 	jsr update_physics
 	jsr draw_obstacle
 	jsr draw_animation_duck
 
+@not_play:
 	; request NMI upload for this frame
 	lda #1
 	sta nmi_ready
@@ -120,12 +124,20 @@ not_loaded:
 	ldx current_state
 	CPX #TITLE
 	BNE NOT_TITLE
+	lda #$3f
+	sta PPU_VRAM_ADDRESS2
+	lda #$04
+	sta PPU_VRAM_ADDRESS2
 	; load title screen
-	draw_background background_tiles_B
+	draw_background background_tiles_A
 	JMP end_load_scene
 NOT_TITLE:
+	lda #$3f
+	sta PPU_VRAM_ADDRESS2
+	lda #$08
+	sta PPU_VRAM_ADDRESS2
 	; load game screen
-	draw_background background_tiles_A
+	draw_background background_tiles_B
 end_load_scene:	
 	lda #1
 	sta scene_loaded
