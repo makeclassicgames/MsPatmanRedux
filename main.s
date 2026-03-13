@@ -47,6 +47,8 @@
 	sta obstacle_dx
 	lda #240
 	sta obstacle_x ; set obstacle X position
+	lda #0
+	sta scroll_x ; set initial scroll offset
 	; initialize palette table
 	ldx #0
 paletteloop:
@@ -102,8 +104,12 @@ a_done:
 	bne @not_play
 	jsr jump_duck
 	jsr update_physics
+	lda scroll_x
+	inc scroll_x
 	jsr draw_obstacle
 	jsr draw_animation_duck
+	jsr check_collisions
+
 
 @not_play:
 	; request NMI upload for this frame
@@ -124,18 +130,16 @@ not_loaded:
 	ldx current_state
 	CPX #TITLE
 	BNE NOT_TITLE
-	lda #$3f
-	sta PPU_VRAM_ADDRESS2
-	lda #$04
-	sta PPU_VRAM_ADDRESS2
 	; load title screen
 	draw_background background_tiles_A
 	JMP end_load_scene
 NOT_TITLE:
-	lda #$3f
-	sta PPU_VRAM_ADDRESS2
-	lda #$08
-	sta PPU_VRAM_ADDRESS2
+	ldx current_state
+	CPX #GAMEOVER
+	BNE NOT_GAMEOVER
+	draw_background game_over_tiles
+	jmp end_load_scene
+NOT_GAMEOVER:
 	; load game screen
 	draw_background background_tiles_B
 end_load_scene:	

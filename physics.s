@@ -69,3 +69,29 @@ reset_obstacle:
 end_jump:
 	rts
 .endproc
+
+.proc check_collisions
+	; check for collision between duck and obstacle
+	lda duck_y
+	cmp duck_x
+	bcc no_collision
+	lda duck_x
+	cmp obstacle_x
+	bcc no_collision
+	lda duck_y
+	cmp #GROUND_Y
+	bcc no_collision
+	lda duck_y
+	cmp #GROUND_Y + 16 ; 16 is the height of the duck sprite
+	bcs no_collision
+
+	; collision detected - set game state to GAMEOVER
+	lda #GAMEOVER
+	sta current_state
+	lda #0
+	sta scene_loaded
+	lda #0
+	sta scroll_x
+no_collision:
+	rts
+.endproc

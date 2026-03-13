@@ -23,7 +23,8 @@ INTERRUPT_S = 1
 	cld			; disable decimal mode
 	ldx #$FF
 	txs			; initialise stack
-
+	lda #0
+	sta current_palette
 	; wait for first vBlank
 	bit PPU_STATUS
 wait_vblank:
@@ -106,6 +107,7 @@ cont_render:
 	lda PPU_STATUS
 	lda #$3F ; set PPU address to $3F00
 	sta PPU_VRAM_ADDRESS2
+	ldx current_palette
 	stx PPU_VRAM_ADDRESS2
 	ldx #0 ; transfer the 32 bytes to VRAM
 loop:
@@ -114,7 +116,8 @@ loop:
 	inx
 	cpx #32
 	bcc loop
-
+	lda scroll_x
+	sta PPU_VRAM_ADDRESS1
 	; enable rendering
 	lda #%00011110
 	sta PPU_MASK

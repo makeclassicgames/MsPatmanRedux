@@ -26,8 +26,8 @@ jump_pressed:		.res 1 ; flag to indicate if the jump button is currently pressed
 a_was_down:		.res 1 ; latch to detect a new A press (edge trigger)
 obstacle_x:		.res 1 ; x position of obstacle
 obstacle_dx:		.res 1 ; x velocity of obstacle
-
-
+scroll_x :			.res 1 ; horizontal scroll offset for background
+current_palette:	.res 1 ; index of the current palette in use
 ;*****************************************************************
 ; Sprite OAM Data area - copied to VRAM in NMI routine
 ;*****************************************************************
