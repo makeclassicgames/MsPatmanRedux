@@ -118,6 +118,8 @@ loop:
 	bcc loop
 	lda scroll_x
 	sta PPU_VRAM_ADDRESS1
+	lda #232
+	sta PPU_VRAM_ADDRESS1
 	; enable rendering
 	lda #%00011110
 	sta PPU_MASK
