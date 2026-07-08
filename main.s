@@ -132,6 +132,18 @@ not_loaded:
 	BNE NOT_TITLE
 	; load title screen
 	draw_background background_tiles_A
+	; Load 64 bytes of attr data
+	ldx #64
+	; Attribute addr: $23C0
+	lda #$23
+	sta PPU_VRAM_ADDRESS2
+	lda #$C0
+	sta PPU_VRAM_ADDRESS2
+	lda #%01010101
+loop:	
+	sta PPU_VRAM_IO
+	dex
+	bne loop
 	JMP end_load_scene
 NOT_TITLE:
 	ldx current_state

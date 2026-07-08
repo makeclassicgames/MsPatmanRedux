@@ -356,7 +356,7 @@ duck_tiles_2:
 .segment "RODATA"
 default_palette:
 .byte $0f,$19,$00,$2c
-.byte $0f,$0c,$21,$32
+.byte $0f,$38,$27,$20; black, yellow, orange, white
 .byte $0f,$24,$26,$38
 .byte $0f,$0b,$1a,$29
 .byte $0f,$0c,$21,$32 ; sp0 yellow
