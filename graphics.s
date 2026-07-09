@@ -355,12 +355,14 @@ duck_tiles_2:
 
 .segment "RODATA"
 default_palette:
+; Background palettes
 .byte $0f,$19,$00,$2c
 .byte $0f,$38,$27,$20; black, yellow, orange, white
 .byte $0f,$24,$26,$38
 .byte $0f,$0b,$1a,$29
+; Sprite palettes
 .byte $0f,$0c,$21,$32 ; sp0 yellow
-.byte $0f,$24,$26,$38 ; sp1 purple
+.byte $0f,$38,$27,$20; black, yellow, orange, white
 .byte $0f,$1a,$16,$14 ; sp2 teal
 .byte $0f,$12,$22,$32 ; sp3 marine
 
