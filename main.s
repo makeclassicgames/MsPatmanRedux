@@ -132,18 +132,9 @@ not_loaded:
 	BNE NOT_TITLE
 	; load title screen
 	draw_background background_tiles_A
-	; Load 64 bytes of attr data
-	ldx #64
-	; Attribute addr: $23C0
-	lda #$23
-	sta PPU_VRAM_ADDRESS2
-	lda #$C0
-	sta PPU_VRAM_ADDRESS2
+	; Set palette 1 in all screen
 	lda #%01010101
-loop:	
-	sta PPU_VRAM_IO
-	dex
-	bne loop
+	jsr load_attr
 	JMP end_load_scene
 NOT_TITLE:
 	ldx current_state
@@ -154,9 +145,29 @@ NOT_TITLE:
 NOT_GAMEOVER:
 	; load game screen
 	draw_background background_tiles_B
+	; Set palette 0 in all screen
+	lda #0
+	jsr load_attr
 end_load_scene:	
 	lda #1
 	sta scene_loaded
 	rts
 .endproc
- 
+
+; Load A into all bytes of attribute table 0
+.segment "CODE"
+.proc load_attr
+	; Attribute addr: $23C0
+	ldx #$23
+	stx PPU_VRAM_ADDRESS2
+	ldx #$C0
+	stx PPU_VRAM_ADDRESS2
+	; Load 64 bytes of attr data
+	ldx #64
+loop:	
+	sta PPU_VRAM_IO
+	dex
+	bne loop
+	
+	rts
+.endproc 
