@@ -141,6 +141,8 @@ NOT_TITLE:
 	CPX #GAMEOVER
 	BNE NOT_GAMEOVER
 	draw_background game_over_tiles
+	lda #%01010101
+	jsr load_attr
 	jmp end_load_scene
 NOT_GAMEOVER:
 	; load game screen
