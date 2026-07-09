@@ -143,6 +143,12 @@ NOT_TITLE:
 	draw_background game_over_tiles
 	lda #%01010101
 	jsr load_attr
+	; Disable sprites
+    lda #0
+    sta $0201
+    sta $0205
+    sta $0209
+    sta $020D
 	jmp end_load_scene
 NOT_GAMEOVER:
 	; load game screen
