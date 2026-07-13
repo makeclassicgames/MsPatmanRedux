@@ -221,6 +221,7 @@ end_draw:
 
 .segment "CODE"
 ; Draw obstacle sprite at current position
+;8206
 .proc draw_obstacle
 	ldx #16
 	;first sprite
@@ -278,6 +279,7 @@ end_draw:
 	clc
 	adc #8
 	sta oam,x
+	rts
 .endproc
 
 .segment "CODE"
