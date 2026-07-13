@@ -149,6 +149,10 @@ NOT_TITLE:
     sta $0205
     sta $0209
     sta $020D
+    sta $0211
+    sta $0215
+    sta $0219
+    sta $021D
 	jmp end_load_scene
 NOT_GAMEOVER:
 	; load game screen
